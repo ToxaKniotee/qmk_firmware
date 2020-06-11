@@ -1,5 +1,6 @@
 #include QMK_KEYBOARD_H
 
+//keycodes {{{
 enum ctrl_keycodes {
     L_BRI = SAFE_RANGE, //LED Brightness Increase                                   //Working
     L_BRD,              //LED Brightness Decrease                                   //Working
@@ -20,7 +21,9 @@ enum ctrl_keycodes {
     DBG_MOU,            //DEBUG Toggle Mouse Prints                                 //
     MD_BOOT             //Restart into bootloader after hold timeout                //Working
 };
+//}}}
 
+// tap dance {{{
 enum tap_dance_codes {
     TD_VIM_ESC = 0
 };
@@ -40,7 +43,9 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 };
 
 keymap_config_t keymap_config;
+//}}}
 
+//keymaps {{{
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
         KC_ESC,          KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,    KC_F8,    KC_F9,   KC_F10,  KC_F11,  KC_F12,             KC_PSCR, KC_SLCK, KC_PAUS, \
@@ -69,7 +74,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     */
 };
+//}}}
 
+//other{{{
 // Runs just one time when the keyboard initializes.
 void matrix_init_user(void) {
 };
@@ -240,3 +247,4 @@ led_instruction_t led_instructions[] = {
     //end must be set to 1 to indicate end of instruction set
      { .end = 1 }
 };
+//}}}
