@@ -1,7 +1,8 @@
 #include QMK_KEYBOARD_H
 
-//keycodes {{{
+//ctrl keycodes {{{
 enum ctrl_keycodes {
+    //Default keycodes {{{
     L_BRI = SAFE_RANGE, //LED Brightness Increase                                   //Working
     L_BRD,              //LED Brightness Decrease                                   //Working
     L_PTN,              //LED Pattern Select Next                                   //Working
@@ -19,41 +20,43 @@ enum ctrl_keycodes {
     DBG_MTRX,           //DEBUG Toggle Matrix Prints                                //
     DBG_KBD,            //DEBUG Toggle Keyboard Prints                              //
     DBG_MOU,            //DEBUG Toggle Mouse Prints                                 //
-    MD_BOOT             //Restart into bootloader after hold timeout                //Working
+    MD_BOOT,            //Restart into bootloader after hold timeout                //Working
+    //}}}
+    TX_VIM
 };
 //}}}
 
 // tap dance {{{
-enum tap_dance_codes {
-    TD_VIM_ESC = 0
-};
-
-void vim_esc(qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1) {
-        SEND_STRING(SS_LCTL("["));
-    } else {
-        register_code(KC_ESC);
-        unregister_code(KC_ESC);
-    }
-    reset_tap_dance(state);
-};
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_VIM_ESC] = ACTION_TAP_DANCE_FN(vim_esc)
-};
-
-keymap_config_t keymap_config;
+//enum tap_dance_codes {
+//    TD_VIM_ESC = 0
+//};
+//
+//void vim_esc(qk_tap_dance_state_t *state, void *user_data) {
+//    if (state->count == 1) {
+//        SEND_STRING(SS_LCTL("["));
+//    } else {
+//        register_code(KC_ESC);
+//        unregister_code(KC_ESC);
+//    }
+//    reset_tap_dance(state);
+//};
+//
+//qk_tap_dance_action_t tap_dance_actions[] = {
+//    [TD_VIM_ESC] = ACTION_TAP_DANCE_FN(vim_esc)
+//};
+//
+//keymap_config_t keymap_config;
 //}}}
 
 //keymaps {{{
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
-        KC_ESC,          KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,    KC_F8,    KC_F9,   KC_F10,  KC_F11,  KC_F12,             KC_PSCR, KC_SLCK, KC_PAUS, \
-        KC_GRV,          KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,     KC_8,     KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,   KC_INS,  KC_HOME, KC_PGUP, \
-        KC_TAB,          KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,     KC_I,     KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,   KC_DEL,  KC_END,  KC_PGDN, \
-        TD(TD_VIM_ESC),  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,     KC_K,     KC_L,    KC_SCLN, KC_QUOT, KC_ENT, \
-        KC_LSFT,         KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,     KC_COMM,  KC_DOT,  KC_SLSH, KC_RSFT,                              KC_UP, \
-        KC_LCTL,         KC_LGUI, KC_LALT,                   KC_SPC,                               KC_RALT, MO(1),   KC_APP,  KC_RCTL,            KC_LEFT, KC_DOWN, KC_RGHT \
+        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,    KC_F8,    KC_F9,   KC_F10,  KC_F11,  KC_F12,             KC_PSCR, KC_SLCK, KC_PAUS, \
+        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,     KC_8,     KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,   KC_INS,  KC_HOME, KC_PGUP, \
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,     KC_I,     KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,   KC_DEL,  KC_END,  KC_PGDN, \
+        TX_VIM,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,     KC_K,     KC_L,    KC_SCLN, KC_QUOT, KC_ENT, \
+        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,     KC_COMM,  KC_DOT,  KC_SLSH, KC_RSFT,                              KC_UP, \
+        KC_LCTL, KC_LGUI, KC_LALT,                   KC_SPC,                               KC_RALT, MO(1),   KC_APP,  KC_RCTL,            KC_LEFT, KC_DOWN, KC_RGHT \
     ),
     [1] = LAYOUT(
         _______, _______, _______, _______, _______, _______, _______, _______,  _______,  _______, _______, _______, _______,            KC_MUTE, _______, _______, \
@@ -76,7 +79,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 //}}}
 
-//other{{{
+//matrix{{{
 // Runs just one time when the keyboard initializes.
 void matrix_init_user(void) {
 };
@@ -84,7 +87,9 @@ void matrix_init_user(void) {
 // Runs constantly in the background, in a loop.
 void matrix_scan_user(void) {
 };
+//}}}
 
+//process record {{{
 #define MODS_SHIFT  (get_mods() & MOD_BIT(KC_LSHIFT) || get_mods() & MOD_BIT(KC_RSHIFT))
 #define MODS_CTRL  (get_mods() & MOD_BIT(KC_LCTL) || get_mods() & MOD_BIT(KC_RCTRL))
 #define MODS_ALT  (get_mods() & MOD_BIT(KC_LALT) || get_mods() & MOD_BIT(KC_RALT))
@@ -93,6 +98,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static uint32_t key_timer;
 
     switch (keycode) {
+        // LED Codes {{{
         case L_BRI:
             if (record->event.pressed) {
                 if (LED_GCR_STEP > LED_GCR_MAX - gcr_desired) gcr_desired = LED_GCR_MAX;
@@ -169,6 +175,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 led_animation_direction = !led_animation_direction;
             }
             return false;
+        //}}}
+        //Default CTRL codes {{{
         case U_T_AGCR:
             if (record->event.pressed && MODS_SHIFT && MODS_CTRL) {
                 TOGGLE_FLAG_AND_PRINT(usb_gcr_auto, "USB GCR auto mode");
@@ -203,11 +211,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
+            //}}}
+        case TX_VIM:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LCTL("["));
+            }
+            return false;
         default:
             return true; //Process all other keycodes normally
     }
 }
+//}}}
 
+//other {{{
 led_instruction_t led_instructions[] = {
     //LEDs are normally inactive, no processing is performed on them
     //Flags are used in matching criteria for an LED to be active and indicate how to color it
